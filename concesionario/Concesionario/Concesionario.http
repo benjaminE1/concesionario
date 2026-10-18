@@ -1,0 +1,6 @@
+@Concesionario_HostAddress = http://localhost:5145
+
+GET {{Concesionario_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
