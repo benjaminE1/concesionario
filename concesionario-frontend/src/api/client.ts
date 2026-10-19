@@ -1,7 +1,7 @@
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import type { ApiError } from '../types'
 
-// Obtener la URL base desde las variables de entorno de Vite
+// Obtener la URL base desde las variables de entorno de Vite (/api en desarrollo)
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 export const apiClient = axios.create({
@@ -13,9 +13,18 @@ export const apiClient = axios.create({
   },
 })
 
-// Interceptor de petición: inyecta el token JWT si está disponible en almacenamiento local
+// Interceptor de petición: previene duplicación de /api e inyecta token JWT
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // Si la URL solicitada incluye explícitamente '/api/' o 'api/', normalizar para no duplicar con baseURL
+    if (config.url) {
+      if (config.url.startsWith('/api/')) {
+        config.url = config.url.replace(/^\/api/, '')
+      } else if (config.url.startsWith('api/')) {
+        config.url = config.url.replace(/^api/, '')
+      }
+    }
+
     const token = localStorage.getItem('token') || sessionStorage.getItem('token')
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
@@ -60,6 +69,22 @@ apiClient.interceptors.response.use(
         }
       }
 
+      // Si el backend responde 401 y no es la llamada de login, emitir evento de sesión expirada
+      if (error.response.status === 401) {
+        const isLoginRequest = error.config?.url?.includes('/Usuario/login')
+        if (!isLoginRequest) {
+          try {
+            sessionStorage.removeItem('token')
+            localStorage.removeItem('token')
+          } catch {
+            // entorno sin storage
+          }
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('auth:unauthorized'))
+          }
+        }
+      }
+
       // Mensajes de respaldo según código HTTP si no hubo mensaje específico
       if (
         normalizedError.message === 'Ocurrió un error inesperado al comunicarse con el servidor.'
@@ -69,13 +94,13 @@ apiClient.interceptors.response.use(
             normalizedError.message = 'Los datos enviados son inválidos.'
             break
           case 401:
-            normalizedError.message = 'Credenciales inválidas o sesión no autorizada.'
+            normalizedError.message = 'Credenciales inválidas o sesión expirada.'
             break
           case 403:
-            normalizedError.message = 'No tienes permisos suficientes para realizar esta acción.'
+            normalizedError.message = 'Acceso denegado: no posees los permisos necesarios para realizar esta acción.'
             break
           case 404:
-            normalizedError.message = 'El recurso solicitado no fue encontrado.'
+            normalizedError.message = 'El recurso solicitado no fue encontrado en el servidor (HTTP 404).'
             break
           case 500:
             normalizedError.message = 'Error interno en el servidor.'
@@ -100,8 +125,7 @@ export const checkApiConnectivity = async (): Promise<{
   details?: unknown
 }> => {
   try {
-    // Intentamos consultar un endpoint público de lectura (/api/vehiculos)
-    const response = await apiClient.get('/vehiculos')
+    const response = await apiClient.get<unknown[]>('/vehiculos')
     return {
       connected: true,
       message: 'Conexión establecida con éxito con la API.',

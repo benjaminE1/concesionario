@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/useAuth'
 
 export const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
+  const { user, isAuthenticated, isAdmin, logout } = useAuth()
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev)
@@ -13,10 +15,10 @@ export const Navbar: React.FC = () => {
     setIsMenuOpen(false)
   }
 
-  const navLinks = [
-    { to: '/', label: 'Inicio' },
-    { to: '/vehiculos', label: 'Vehículos' },
-  ]
+  const handleLogout = () => {
+    closeMenu()
+    logout()
+  }
 
   return (
     <header className="site-header" role="banner">
@@ -54,21 +56,71 @@ export const Navbar: React.FC = () => {
           aria-label="Navegación principal"
         >
           <ul className="nav-list">
-            {navLinks.map((link) => {
-              const isActive = location.pathname === link.to
-              return (
-                <li key={link.to} className="nav-item">
-                  <Link
-                    to={link.to}
-                    className={`nav-link ${isActive ? 'is-active' : ''}`}
-                    aria-current={isActive ? 'page' : undefined}
-                    onClick={closeMenu}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              )
-            })}
+            <li className="nav-item">
+              <Link
+                to="/"
+                className={`nav-link ${location.pathname === '/' ? 'is-active' : ''}`}
+                aria-current={location.pathname === '/' ? 'page' : undefined}
+                onClick={closeMenu}
+              >
+                Inicio
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link
+                to="/vehiculos"
+                className={`nav-link ${location.pathname === '/vehiculos' ? 'is-active' : ''}`}
+                aria-current={location.pathname === '/vehiculos' ? 'page' : undefined}
+                onClick={closeMenu}
+              >
+                Vehículos
+              </Link>
+            </li>
+
+            {/* Enlace al Panel Admin visible solo si tiene rol Admin */}
+            {isAdmin && (
+              <li className="nav-item">
+                <Link
+                  to="/admin"
+                  className={`nav-link ${location.pathname === '/admin' ? 'is-active' : ''}`}
+                  aria-current={location.pathname === '/admin' ? 'page' : undefined}
+                  onClick={closeMenu}
+                >
+                  Panel Admin
+                </Link>
+              </li>
+            )}
+
+            {/* Sección de autenticación */}
+            {isAuthenticated && user ? (
+              <li className="nav-item auth-nav-item">
+                <div className="user-pill" aria-label={`Usuario: ${user.name}`}>
+                  <span className="user-name">{user.name}</span>
+                  <span className="status-pill badge-disponible user-role">{user.role}</span>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-logout"
+                  onClick={handleLogout}
+                  aria-label="Cerrar sesión"
+                >
+                  Salir
+                </button>
+              </li>
+            ) : (
+              <li className="nav-item">
+                <Link
+                  to="/login"
+                  className={`btn btn-primary nav-login-btn ${
+                    location.pathname === '/login' ? 'is-active' : ''
+                  }`}
+                  onClick={closeMenu}
+                >
+                  Iniciar Sesión
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
