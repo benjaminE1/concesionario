@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { CarFront, Menu, X, LogOut } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 
 export const Navbar: React.FC = () => {
@@ -28,9 +29,7 @@ export const Navbar: React.FC = () => {
 
       <div className="header-container">
         <Link to="/" className="brand-link" onClick={closeMenu}>
-          <span className="brand-icon" aria-hidden="true">
-            🚗
-          </span>
+          <CarFront className="brand-icon" size={24} aria-hidden="true" />
           <span className="brand-text">AutoGestión Concesionario</span>
         </Link>
 
@@ -43,9 +42,11 @@ export const Navbar: React.FC = () => {
           aria-label={isMenuOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'}
           onClick={toggleMenu}
         >
-          <span className="menu-icon" aria-hidden="true">
-            {isMenuOpen ? '✕' : '☰'}
-          </span>
+          {isMenuOpen ? (
+            <X size={20} aria-hidden="true" />
+          ) : (
+            <Menu size={20} aria-hidden="true" />
+          )}
         </button>
 
         {/* Navegación principal */}
@@ -105,7 +106,8 @@ export const Navbar: React.FC = () => {
                   onClick={handleLogout}
                   aria-label="Cerrar sesión"
                 >
-                  Salir
+                  <LogOut size={15} aria-hidden="true" />
+                  <span>Salir</span>
                 </button>
               </li>
             ) : (

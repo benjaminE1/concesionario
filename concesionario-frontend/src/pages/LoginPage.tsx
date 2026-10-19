@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { LockKeyhole, Lightbulb, ArrowLeft, LogIn } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 
 export const LoginPage: React.FC = () => {
@@ -70,7 +71,7 @@ export const LoginPage: React.FC = () => {
       <div className="login-card" role="region" aria-labelledby="login-heading">
         <header className="login-header">
           <div className="login-icon" aria-hidden="true">
-            🔐
+            <LockKeyhole size={40} className="login-icon-lucide" />
           </div>
           <h1 id="login-heading" className="login-title">
             Iniciar Sesión
@@ -155,13 +156,17 @@ export const LoginPage: React.FC = () => {
             disabled={isSubmitting || loading}
             aria-busy={isSubmitting || loading}
           >
-            {isSubmitting || loading ? 'Verificando...' : 'Acceder al Sistema'}
+            <LogIn size={18} aria-hidden="true" style={{ marginRight: '0.5rem' }} />
+            <span>{isSubmitting || loading ? 'Verificando...' : 'Acceder al Sistema'}</span>
           </button>
         </form>
 
         {/* Tarjeta de ayuda con credenciales de prueba */}
         <aside className="login-help" aria-label="Credenciales para evaluación">
-          <p className="help-title">💡 Credenciales de prueba (Rol Admin):</p>
+          <p className="help-title" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Lightbulb size={18} aria-hidden="true" style={{ color: '#f59e0b', flexShrink: 0 }} />
+            <span>Credenciales de prueba (Rol Admin):</span>
+          </p>
           <div className="help-box">
             <p>
               <strong>Email:</strong> <code>admin@gmail.com</code>
@@ -176,8 +181,9 @@ export const LoginPage: React.FC = () => {
         </aside>
 
         <div className="login-footer">
-          <Link to="/" className="nav-link">
-            ← Volver a la página principal
+          <Link to="/" className="nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+            <ArrowLeft size={16} aria-hidden="true" />
+            <span>Volver a la página principal</span>
           </Link>
         </div>
       </div>

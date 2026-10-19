@@ -1,4 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import {
+  Loader2,
+  CheckCircle2,
+  XCircle,
+  CircleDot,
+  RefreshCw,
+  Globe,
+  ShieldCheck,
+  Sparkles,
+  KeyRound,
+} from 'lucide-react'
 import { checkApiConnectivity } from '../api/client'
 
 interface ConnectivityState {
@@ -74,10 +85,30 @@ export const HomePage: React.FC = () => {
             role="status"
             aria-live="polite"
           >
-            {connectivity.status === 'checking' && '⏳ Verificando...'}
-            {connectivity.status === 'connected' && '✓ En Línea'}
-            {connectivity.status === 'disconnected' && '✕ Sin Conexión'}
-            {connectivity.status === 'idle' && '⚪ En Espera'}
+            {connectivity.status === 'checking' && (
+              <>
+                <Loader2 size={14} className="spin" aria-hidden="true" style={{ marginRight: '0.35rem' }} />
+                <span>Verificando...</span>
+              </>
+            )}
+            {connectivity.status === 'connected' && (
+              <>
+                <CheckCircle2 size={14} aria-hidden="true" style={{ marginRight: '0.35rem' }} />
+                <span>En Línea</span>
+              </>
+            )}
+            {connectivity.status === 'disconnected' && (
+              <>
+                <XCircle size={14} aria-hidden="true" style={{ marginRight: '0.35rem' }} />
+                <span>Sin Conexión</span>
+              </>
+            )}
+            {connectivity.status === 'idle' && (
+              <>
+                <CircleDot size={14} aria-hidden="true" style={{ marginRight: '0.35rem' }} />
+                <span>En Espera</span>
+              </>
+            )}
           </span>
         </div>
 
@@ -101,7 +132,13 @@ export const HomePage: React.FC = () => {
             disabled={connectivity.status === 'checking'}
             aria-busy={connectivity.status === 'checking'}
           >
-            {connectivity.status === 'checking' ? 'Comprobando...' : 'Reintentar comprobación'}
+            <RefreshCw
+              size={15}
+              className={connectivity.status === 'checking' ? 'spin' : ''}
+              aria-hidden="true"
+              style={{ marginRight: '0.4rem' }}
+            />
+            <span>{connectivity.status === 'checking' ? 'Comprobando...' : 'Reintentar comprobación'}</span>
           </button>
         </div>
       </section>
@@ -114,7 +151,10 @@ export const HomePage: React.FC = () => {
 
         <div className="cards-grid">
           <article className="info-card">
-            <h3 className="info-title">🌐 Conectividad y Proxy</h3>
+            <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Globe size={18} color="#60a5fa" aria-hidden="true" />
+              <span>Conectividad y Proxy</span>
+            </h3>
             <p className="info-text">
               Peticiones dirigidas a <code>/api</code> reenviadas automáticamente por el proxy de desarrollo Vite hacia <code>http://localhost:5145</code> para evitar bloqueos por CORS.
             </p>
@@ -126,7 +166,10 @@ export const HomePage: React.FC = () => {
           </article>
 
           <article className="info-card">
-            <h3 className="info-title">🛡️ Cliente HTTP Seguro</h3>
+            <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <ShieldCheck size={18} color="#60a5fa" aria-hidden="true" />
+              <span>Cliente HTTP Seguro</span>
+            </h3>
             <p className="info-text">
               Axios configurado con interceptores inteligentes adaptados al backend ASP.NET Core:
             </p>
@@ -138,7 +181,10 @@ export const HomePage: React.FC = () => {
           </article>
 
           <article className="info-card">
-            <h3 className="info-title">♿ Accesibilidad y UX (WCAG 2.2 AA)</h3>
+            <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Sparkles size={18} color="#60a5fa" aria-hidden="true" />
+              <span>Accesibilidad y UX (WCAG 2.2 AA)</span>
+            </h3>
             <p className="info-text">
               Estructura semántica HTML5, ratios de contraste superiores a 4.5:1, enlace de salto al contenido principal, navegación por teclado y foco visible en todos los elementos interactivos.
             </p>
@@ -150,7 +196,10 @@ export const HomePage: React.FC = () => {
           </article>
 
           <article className="info-card">
-            <h3 className="info-title">📋 Próxima Etapa: Autenticación JWT</h3>
+            <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <KeyRound size={18} color="#60a5fa" aria-hidden="true" />
+              <span>Autenticación JWT y Roles</span>
+            </h3>
             <p className="info-text">
               Integración del formulario de inicio de sesión con <code>admin@gmail.com</code>, decodificación de claims del token y protección de rutas privadas por rol.
             </p>

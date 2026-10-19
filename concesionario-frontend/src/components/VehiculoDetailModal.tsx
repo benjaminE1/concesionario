@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { X } from 'lucide-react'
 import type { VehiculoResponseDto } from '../types'
 
 interface VehiculoDetailModalProps {
@@ -82,7 +83,7 @@ export const VehiculoDetailModal: React.FC<VehiculoDetailModalProps> = ({
             onClick={onClose}
             aria-label="Cerrar modal de detalles"
           >
-            ✕
+            <X size={20} aria-hidden="true" />
           </button>
         </header>
 

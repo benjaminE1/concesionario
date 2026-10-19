@@ -10,6 +10,18 @@ import {
   getSucursales,
 } from '../api/vehiculosService'
 import { useAuth } from '../context/useAuth'
+import {
+  Plus,
+  RefreshCw,
+  Info,
+  X,
+  Eye,
+  Pencil,
+  Trash2,
+  CarFront,
+  Search,
+  Filter,
+} from 'lucide-react'
 import { VehiculoDetailModal } from '../components/VehiculoDetailModal'
 import { VehiculoFormModal } from '../components/VehiculoFormModal'
 import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal'
@@ -290,12 +302,12 @@ export const VehiculosPage: React.FC = () => {
           {isAdmin && (
             <button
               type="button"
-              className="btn btn-primary"
-              style={{ backgroundColor: '#15803d' }}
+              className="btn btn-success"
               onClick={handleOpenCreate}
               aria-label="Registrar un nuevo vehículo"
             >
-              ➕ Nuevo Vehículo
+              <Plus size={18} aria-hidden="true" />
+              <span>Nuevo Vehículo</span>
             </button>
           )}
 
@@ -306,7 +318,8 @@ export const VehiculosPage: React.FC = () => {
             disabled={loading}
             aria-label="Recargar lista de vehículos"
           >
-            {loading ? 'Cargando...' : '🔄 Actualizar'}
+            <RefreshCw size={16} className={loading ? 'spin' : ''} aria-hidden="true" />
+            <span>Actualizar</span>
           </button>
         </div>
       </header>
@@ -314,7 +327,7 @@ export const VehiculosPage: React.FC = () => {
       {/* Aviso informativo de permisos si el usuario no es Admin */}
       {!isAdmin && (
         <aside className="role-notice-banner" role="status">
-          <span aria-hidden="true">ℹ️</span>
+          <Info size={18} aria-hidden="true" style={{ flexShrink: 0 }} />
           <span>
             Estás visualizando el catálogo en modo de solo lectura. Para crear, editar o eliminar vehículos, debes iniciar sesión con una cuenta de <strong>Administrador</strong>.
           </span>
@@ -336,7 +349,7 @@ export const VehiculosPage: React.FC = () => {
               onClick={() => setFeedback(null)}
               aria-label="Cerrar notificación"
             >
-              ✕
+              <X size={18} aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -346,6 +359,7 @@ export const VehiculosPage: React.FC = () => {
       <section className="filters-card" aria-label="Filtros de vehículos">
         <div className="filter-group">
           <label htmlFor="search-input" className="filter-label">
+            <Search size={14} aria-hidden="true" style={{ display: 'inline', marginRight: '0.35rem', verticalAlign: 'middle' }} />
             Buscar por modelo o patente:
           </label>
           <input
@@ -360,6 +374,7 @@ export const VehiculosPage: React.FC = () => {
 
         <div className="filter-group">
           <label htmlFor="estado-select" className="filter-label">
+            <Filter size={14} aria-hidden="true" style={{ display: 'inline', marginRight: '0.35rem', verticalAlign: 'middle' }} />
             Filtrar por estado:
           </label>
           <select
@@ -413,9 +428,7 @@ export const VehiculosPage: React.FC = () => {
 
           {vehiculosFiltrados.length === 0 ? (
             <div className="empty-state">
-              <span className="empty-icon" aria-hidden="true">
-                🚙
-              </span>
+              <CarFront size={56} className="empty-icon-lucide" aria-hidden="true" />
               <h2 className="empty-title">No se encontraron vehículos</h2>
               <p className="empty-text">
                 {vehiculos.length === 0
@@ -445,7 +458,7 @@ export const VehiculosPage: React.FC = () => {
                     const nombreMarca = marcasMap[v.idMarca] || `Marca #${v.idMarca}`
                     const estadoLower = v.estado.toLowerCase()
                     const badgeClass =
-                      estadoLower === 'disponible'
+                        estadoLower === 'disponible'
                         ? 'badge-disponible'
                         : estadoLower === 'vendido'
                           ? 'badge-vendido'
@@ -473,7 +486,8 @@ export const VehiculosPage: React.FC = () => {
                               title="Consultar detalles"
                               aria-label={`Ver detalles de ${v.modelo} patente ${v.patente}`}
                             >
-                              👁️ Ver
+                              <Eye size={15} aria-hidden="true" />
+                              <span>Ver</span>
                             </button>
 
                             {isAdmin && (
@@ -485,7 +499,8 @@ export const VehiculosPage: React.FC = () => {
                                   title="Editar vehículo"
                                   aria-label={`Editar ${v.modelo} patente ${v.patente}`}
                                 >
-                                  ✏️ Editar
+                                  <Pencil size={15} aria-hidden="true" />
+                                  <span>Editar</span>
                                 </button>
                                 <button
                                   type="button"
@@ -494,7 +509,8 @@ export const VehiculosPage: React.FC = () => {
                                   title="Eliminar vehículo"
                                   aria-label={`Eliminar ${v.modelo} patente ${v.patente}`}
                                 >
-                                  🗑️ Eliminar
+                                  <Trash2 size={15} aria-hidden="true" />
+                                  <span>Eliminar</span>
                                 </button>
                               </>
                             )}

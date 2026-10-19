@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { ShieldAlert, ArrowLeft, CarFront } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 
 export const UnauthorizedPage: React.FC = () => {
@@ -7,10 +8,8 @@ export const UnauthorizedPage: React.FC = () => {
 
   return (
     <div className="not-found-container" role="region" aria-labelledby="unauthorized-title">
-      <span className="empty-icon" aria-hidden="true" style={{ fontSize: '4rem' }}>
-        🚫
-      </span>
-      <h1 id="unauthorized-title" className="not-found-code" style={{ color: '#b91c1c' }}>
+      <ShieldAlert size={64} color="#f87171" aria-hidden="true" style={{ margin: '0 auto 1rem', display: 'block' }} />
+      <h1 id="unauthorized-title" className="not-found-code" style={{ color: '#f87171' }}>
         403
       </h1>
       <h2 className="not-found-heading">Acceso Denegado</h2>
@@ -33,11 +32,13 @@ export const UnauthorizedPage: React.FC = () => {
       )}
 
       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link to="/" className="btn btn-primary">
-          Volver al Inicio
+        <Link to="/" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+          <ArrowLeft size={16} aria-hidden="true" />
+          <span>Volver al Inicio</span>
         </Link>
-        <Link to="/vehiculos" className="btn btn-primary" style={{ backgroundColor: '#475569' }}>
-          Ver Catálogo de Vehículos
+        <Link to="/vehiculos" className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+          <CarFront size={16} aria-hidden="true" />
+          <span>Ver Catálogo de Vehículos</span>
         </Link>
       </div>
     </div>

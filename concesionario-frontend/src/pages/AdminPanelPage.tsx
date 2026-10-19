@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { LogOut, CarFront, Users, Building2 } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 
 export const AdminPanelPage: React.FC = () => {
@@ -18,12 +19,12 @@ export const AdminPanelPage: React.FC = () => {
         </div>
         <button
           type="button"
-          className="btn btn-primary"
-          style={{ backgroundColor: '#b91c1c' }}
+          className="btn btn-danger"
           onClick={logout}
           aria-label="Cerrar sesión actual"
         >
-          Cerrar Sesión
+          <LogOut size={16} aria-hidden="true" style={{ marginRight: '0.4rem' }} />
+          <span>Cerrar Sesión</span>
         </button>
       </header>
 
@@ -64,7 +65,10 @@ export const AdminPanelPage: React.FC = () => {
 
         <div className="cards-grid">
           <article className="info-card">
-            <h3 className="info-title">🚗 Gestión de Vehículos</h3>
+            <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <CarFront size={18} color="#60a5fa" aria-hidden="true" />
+              <span>Gestión de Vehículos</span>
+            </h3>
             <p className="info-text">
               Tu rol permite crear, editar y eliminar vehículos en el backend (rutas <code>POST</code>, <code>PUT</code>, <code>DELETE /api/vehiculos</code>).
             </p>
@@ -74,7 +78,10 @@ export const AdminPanelPage: React.FC = () => {
           </article>
 
           <article className="info-card">
-            <h3 className="info-title">👥 Gestión de Usuarios y Roles</h3>
+            <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Users size={18} color="#60a5fa" aria-hidden="true" />
+              <span>Gestión de Usuarios y Roles</span>
+            </h3>
             <p className="info-text">
               Autorización completa sobre los endpoints administrativos <code>/api/Usuario</code> y <code>/api/rol</code> que exigen política <code>RequireRole(&quot;Admin&quot;)</code>.
             </p>
@@ -84,7 +91,10 @@ export const AdminPanelPage: React.FC = () => {
           </article>
 
           <article className="info-card">
-            <h3 className="info-title">🏢 Sucursales y Facturas</h3>
+            <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Building2 size={18} color="#60a5fa" aria-hidden="true" />
+              <span>Sucursales y Facturas</span>
+            </h3>
             <p className="info-text">
               Control sobre sucursales (<code>/api/sucursal</code>) y registro contable de facturas (<code>/api/facturas</code>).
             </p>

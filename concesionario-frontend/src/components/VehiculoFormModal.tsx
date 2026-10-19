@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { X, Save, Plus } from 'lucide-react'
 import type {
   VehiculoResponseDto,
   CreateVehiculoDto,
@@ -172,7 +173,7 @@ const VehiculoFormModalInner: React.FC<VehiculoFormModalProps> = ({
             disabled={isSubmitting}
             aria-label="Cerrar modal de formulario"
           >
-            ✕
+            <X size={20} aria-hidden="true" />
           </button>
         </header>
 
@@ -469,11 +470,18 @@ const VehiculoFormModalInner: React.FC<VehiculoFormModalProps> = ({
               disabled={isSubmitting}
               aria-busy={isSubmitting}
             >
-              {isSubmitting
-                ? 'Guardando...'
-                : isEditing
-                  ? 'Guardar Cambios'
-                  : 'Crear Vehículo'}
+              {isEditing ? (
+                <Save size={16} aria-hidden="true" style={{ marginRight: '0.4rem' }} />
+              ) : (
+                <Plus size={16} aria-hidden="true" style={{ marginRight: '0.4rem' }} />
+              )}
+              <span>
+                {isSubmitting
+                  ? 'Guardando...'
+                  : isEditing
+                    ? 'Guardar Cambios'
+                    : 'Crear Vehículo'}
+              </span>
             </button>
           </footer>
         </form>

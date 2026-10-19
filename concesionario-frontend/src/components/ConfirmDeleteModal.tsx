@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { AlertTriangle, X, Trash2 } from 'lucide-react'
 import type { VehiculoResponseDto } from '../types'
 
 interface ConfirmDeleteModalProps {
@@ -45,11 +46,9 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
         aria-labelledby="confirm-delete-title"
       >
         <header className="modal-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }} aria-hidden="true">
-              ⚠️
-            </span>
-            <h2 id="confirm-delete-title" className="modal-title" style={{ color: '#b91c1c' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <AlertTriangle size={22} color="#f87171" aria-hidden="true" />
+            <h2 id="confirm-delete-title" className="modal-title" style={{ color: '#f87171' }}>
               Confirmar Eliminación
             </h2>
           </div>
@@ -60,7 +59,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
             disabled={isDeleting}
             aria-label="Cerrar modal de confirmación"
           >
-            ✕
+            <X size={20} aria-hidden="true" />
           </button>
         </header>
 
@@ -81,7 +80,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
             </p>
           </div>
 
-          <p className="help-note" style={{ color: '#b91c1c' }}>
+          <p className="help-note" style={{ color: '#f87171' }}>
             Esta operación invocará <code>DELETE /api/vehiculos/{vehiculo.idVehiculo}</code> en la base de datos y no se puede deshacer.
           </p>
 
@@ -108,7 +107,8 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
             disabled={isDeleting}
             aria-busy={isDeleting}
           >
-            {isDeleting ? 'Eliminando...' : 'Sí, Eliminar Vehículo'}
+            <Trash2 size={16} aria-hidden="true" style={{ marginRight: '0.4rem' }} />
+            <span>{isDeleting ? 'Eliminando...' : 'Sí, Eliminar Vehículo'}</span>
           </button>
         </footer>
       </div>
