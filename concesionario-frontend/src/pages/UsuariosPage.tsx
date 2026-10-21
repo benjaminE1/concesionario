@@ -24,6 +24,7 @@ import {
 import { UsuarioDetailModal } from '../components/UsuarioDetailModal'
 import { UsuarioFormModal } from '../components/UsuarioFormModal'
 import { UsuarioDeleteModal } from '../components/UsuarioDeleteModal'
+import { Pagination } from '../components/Pagination'
 import type {
   UsuarioResponseDto,
   CrearUsuarioDto,
@@ -43,6 +44,8 @@ export const UsuariosPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [roleFilter, setRoleFilter] = useState<string>('todos')
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const PAGE_SIZE = 10
 
   // Feedback de operaciones CRUD
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
@@ -159,6 +162,7 @@ export const UsuariosPage: React.FC = () => {
       }
 
       setUsuarios((prev) => [enrichedUser, ...prev])
+      setCurrentPage(1)
       setFeedback({
         type: 'success',
         message: `Usuario "${dto.nombre}" (${dto.email}) registrado con éxito en el sistema.`,
@@ -268,6 +272,14 @@ export const UsuariosPage: React.FC = () => {
     })
   }, [usuarios, searchTerm, roleFilter, rolesMap])
 
+  const totalPages = Math.max(1, Math.ceil(usuariosFiltrados.length / PAGE_SIZE))
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages)
+
+  const usuariosPaginados = useMemo(() => {
+    const startIndex = (safeCurrentPage - 1) * PAGE_SIZE
+    return usuariosFiltrados.slice(startIndex, startIndex + PAGE_SIZE)
+  }, [usuariosFiltrados, safeCurrentPage])
+
   const getRoleBadgeClass = (roleName: string) => {
     const lower = roleName.toLowerCase()
     if (lower === 'admin') return 'badge-mantenimiento'
@@ -369,7 +381,10 @@ export const UsuariosPage: React.FC = () => {
             className="form-input"
             placeholder="Buscar por nombre, correo o rol..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              setCurrentPage(1)
+            }}
             aria-label="Buscar usuarios"
           />
         </div>
@@ -384,7 +399,10 @@ export const UsuariosPage: React.FC = () => {
               id="filter-role"
               className="form-select"
               value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
+              onChange={(e) => {
+                setRoleFilter(e.target.value)
+                setCurrentPage(1)
+              }}
               aria-label="Filtrar por rol del sistema"
             >
               <option value="todos">Todos los roles</option>
@@ -430,6 +448,7 @@ export const UsuariosPage: React.FC = () => {
               onClick={() => {
                 setSearchTerm('')
                 setRoleFilter('todos')
+                setCurrentPage(1)
               }}
               style={{ marginTop: '1rem' }}
             >
@@ -438,7 +457,8 @@ export const UsuariosPage: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="table-container" role="region" aria-label="Tabla de usuarios">
+        <>
+          <div className="table-container" role="region" aria-label="Tabla de usuarios">
           <table className="data-table">
             <thead>
               <tr>
@@ -452,7 +472,7 @@ export const UsuariosPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {usuariosFiltrados.map((u) => {
+              {usuariosPaginados.map((u) => {
                 const nombreRol = u.nombreRol || rolesMap[u.idRol] || `Rol #${u.idRol}`
                 const isCurrentAccount = user?.id === u.idUsuario
 
@@ -538,7 +558,16 @@ export const UsuariosPage: React.FC = () => {
             </tbody>
           </table>
         </div>
-      )}
+
+        <Pagination
+          currentPage={safeCurrentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={usuariosFiltrados.length}
+          pageSize={PAGE_SIZE}
+        />
+      </>
+    )}
 
       {/* Modales */}
       <UsuarioDetailModal

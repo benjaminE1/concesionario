@@ -25,6 +25,7 @@ import {
 import { VehiculoDetailModal } from '../components/VehiculoDetailModal'
 import { VehiculoFormModal } from '../components/VehiculoFormModal'
 import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal'
+import { Pagination } from '../components/Pagination'
 import type {
   VehiculoResponseDto,
   CreateVehiculoDto,
@@ -49,6 +50,8 @@ export const VehiculosPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [estadoFilter, setEstadoFilter] = useState<string>('todos')
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const PAGE_SIZE = 10
 
   // Feedback de operaciones CRUD
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
@@ -218,6 +221,7 @@ export const VehiculosPage: React.FC = () => {
         // POST /api/vehiculos
         const nuevoVehiculo = await createVehiculo(dto)
         setVehiculos((prev) => [nuevoVehiculo, ...prev])
+        setCurrentPage(1)
 
         setFeedback({
           type: 'success',
@@ -278,6 +282,14 @@ export const VehiculosPage: React.FC = () => {
       return matchSearch && matchEstado
     })
   }, [vehiculos, searchTerm, estadoFilter])
+
+  const totalPages = Math.max(1, Math.ceil(vehiculosFiltrados.length / PAGE_SIZE))
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages)
+
+  const vehiculosPaginados = useMemo(() => {
+    const startIndex = (safeCurrentPage - 1) * PAGE_SIZE
+    return vehiculosFiltrados.slice(startIndex, startIndex + PAGE_SIZE)
+  }, [vehiculosFiltrados, safeCurrentPage])
 
   const formatPrecio = (precio: number) => {
     return new Intl.NumberFormat('es-CL', {
@@ -368,7 +380,10 @@ export const VehiculosPage: React.FC = () => {
             className="form-input"
             placeholder="Ej: Corolla, Hilux, AB123CD..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              setCurrentPage(1)
+            }}
           />
         </div>
 
@@ -381,7 +396,10 @@ export const VehiculosPage: React.FC = () => {
             id="estado-select"
             className="form-select"
             value={estadoFilter}
-            onChange={(e) => setEstadoFilter(e.target.value)}
+            onChange={(e) => {
+              setEstadoFilter(e.target.value)
+              setCurrentPage(1)
+            }}
           >
             <option value="todos">Todos los estados</option>
             <option value="Disponible">Disponible</option>
@@ -437,8 +455,9 @@ export const VehiculosPage: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="table-responsive">
-              <table className="data-table" aria-label="Tabla de gestión de vehículos">
+            <>
+              <div className="table-responsive">
+                <table className="data-table" aria-label="Tabla de gestión de vehículos">
                 <thead>
                   <tr>
                     <th scope="col">Patente</th>
@@ -453,7 +472,7 @@ export const VehiculosPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {vehiculosFiltrados.map((v) => {
+                  {vehiculosPaginados.map((v) => {
                     const nombreMarca = marcasMap[v.idMarca] || `Marca #${v.idMarca}`
                     const estadoLower = v.estado.toLowerCase()
                     const badgeClass =
@@ -520,7 +539,16 @@ export const VehiculosPage: React.FC = () => {
                 </tbody>
               </table>
             </div>
-          )}
+
+            <Pagination
+              currentPage={safeCurrentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={vehiculosFiltrados.length}
+              pageSize={PAGE_SIZE}
+            />
+          </>
+        )}
         </>
       )}
 

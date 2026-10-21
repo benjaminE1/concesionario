@@ -21,6 +21,7 @@ import {
 import { SucursalDetailModal } from '../components/SucursalDetailModal'
 import { SucursalFormModal } from '../components/SucursalFormModal'
 import { SucursalDeleteModal } from '../components/SucursalDeleteModal'
+import { Pagination } from '../components/Pagination'
 import type { Sucursal, CreateSucursalDto } from '../types'
 
 export const SucursalesPage: React.FC = () => {
@@ -33,6 +34,8 @@ export const SucursalesPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const PAGE_SIZE = 10
 
   // Feedback de operaciones CRUD
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
@@ -144,6 +147,7 @@ export const SucursalesPage: React.FC = () => {
         // POST /api/sucursal
         const nuevaSucursal = await createSucursal(dto)
         setSucursales((prev) => [nuevaSucursal, ...prev])
+        setCurrentPage(1)
 
         setFeedback({
           type: 'success',
@@ -213,6 +217,14 @@ export const SucursalesPage: React.FC = () => {
       return matchNombre || matchCiudad || matchDireccion || matchTelefono
     })
   }, [sucursales, searchTerm])
+
+  const totalPages = Math.max(1, Math.ceil(sucursalesFiltradas.length / PAGE_SIZE))
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages)
+
+  const sucursalesPaginadas = useMemo(() => {
+    const startIndex = (safeCurrentPage - 1) * PAGE_SIZE
+    return sucursalesFiltradas.slice(startIndex, startIndex + PAGE_SIZE)
+  }, [sucursalesFiltradas, safeCurrentPage])
 
   return (
     <div className="vehiculos-page" aria-busy={loading}>
@@ -307,7 +319,10 @@ export const SucursalesPage: React.FC = () => {
             className="form-input"
             placeholder="Ej: Central, Santiago, Alameda, +56 2..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              setCurrentPage(1)
+            }}
             aria-label="Buscar sucursales"
           />
         </div>
@@ -342,7 +357,10 @@ export const SucursalesPage: React.FC = () => {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={() => setSearchTerm('')}
+              onClick={() => {
+                setSearchTerm('')
+                setCurrentPage(1)
+              }}
               style={{ marginTop: '1rem' }}
             >
               Limpiar búsqueda
@@ -350,7 +368,8 @@ export const SucursalesPage: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="table-container" role="region" aria-label="Tabla de sucursales">
+        <>
+          <div className="table-container" role="region" aria-label="Tabla de sucursales">
           <table className="data-table">
             <thead>
               <tr>
@@ -364,7 +383,7 @@ export const SucursalesPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {sucursalesFiltradas.map((sucursal) => (
+              {sucursalesPaginadas.map((sucursal) => (
                 <tr key={sucursal.idSucursal} className="table-row">
                   <td className="cell-modelo">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -435,7 +454,16 @@ export const SucursalesPage: React.FC = () => {
             </tbody>
           </table>
         </div>
-      )}
+
+        <Pagination
+          currentPage={safeCurrentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={sucursalesFiltradas.length}
+          pageSize={PAGE_SIZE}
+        />
+      </>
+    )}
 
       {/* Modales */}
       <SucursalDetailModal

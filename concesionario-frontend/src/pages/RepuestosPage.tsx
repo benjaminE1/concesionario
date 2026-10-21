@@ -22,6 +22,7 @@ import {
 import { RepuestoDetailModal } from '../components/RepuestoDetailModal'
 import { RepuestoFormModal } from '../components/RepuestoFormModal'
 import { RepuestoDeleteModal } from '../components/RepuestoDeleteModal'
+import { Pagination } from '../components/Pagination'
 import type { Repuesto, CreateRepuestoDto, Sucursal } from '../types'
 
 export const RepuestosPage: React.FC = () => {
@@ -37,6 +38,8 @@ export const RepuestosPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [stockFilter, setStockFilter] = useState<string>('todos')
   const [sucursalFilter, setSucursalFilter] = useState<string>('todos')
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const PAGE_SIZE = 10
 
   // Feedback de operaciones CRUD
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
@@ -165,6 +168,7 @@ export const RepuestosPage: React.FC = () => {
         // POST /api/repuestos
         const nuevoRepuesto = await createRepuesto(dto)
         setRepuestos((prev) => [nuevoRepuesto, ...prev])
+        setCurrentPage(1)
 
         setFeedback({
           type: 'success',
@@ -245,6 +249,14 @@ export const RepuestosPage: React.FC = () => {
       return matchSearch && matchStock && matchSucursal
     })
   }, [repuestos, searchTerm, stockFilter, sucursalFilter])
+
+  const totalPages = Math.max(1, Math.ceil(repuestosFiltrados.length / PAGE_SIZE))
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages)
+
+  const repuestosPaginados = useMemo(() => {
+    const startIndex = (safeCurrentPage - 1) * PAGE_SIZE
+    return repuestosFiltrados.slice(startIndex, startIndex + PAGE_SIZE)
+  }, [repuestosFiltrados, safeCurrentPage])
 
   const formatPrecio = (precio: number) => {
     return new Intl.NumberFormat('es-CL', {
@@ -347,7 +359,10 @@ export const RepuestosPage: React.FC = () => {
             className="form-input"
             placeholder="Buscar por nombre o código..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              setCurrentPage(1)
+            }}
             aria-label="Buscar repuestos"
           />
         </div>
@@ -361,7 +376,10 @@ export const RepuestosPage: React.FC = () => {
             id="filter-stock"
             className="form-select"
             value={stockFilter}
-            onChange={(e) => setStockFilter(e.target.value)}
+            onChange={(e) => {
+              setStockFilter(e.target.value)
+              setCurrentPage(1)
+            }}
             aria-label="Filtrar por nivel de stock"
           >
             <option value="todos">Todos los niveles</option>
@@ -381,7 +399,10 @@ export const RepuestosPage: React.FC = () => {
               id="filter-sucursal"
               className="form-select"
               value={sucursalFilter}
-              onChange={(e) => setSucursalFilter(e.target.value)}
+              onChange={(e) => {
+                setSucursalFilter(e.target.value)
+                setCurrentPage(1)
+              }}
               aria-label="Filtrar por sucursal"
             >
               <option value="todos">Todas las sucursales</option>
@@ -429,6 +450,7 @@ export const RepuestosPage: React.FC = () => {
                 setSearchTerm('')
                 setStockFilter('todos')
                 setSucursalFilter('todos')
+                setCurrentPage(1)
               }}
               style={{ marginTop: '1rem' }}
             >
@@ -437,7 +459,8 @@ export const RepuestosPage: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="table-container" role="region" aria-label="Tabla de repuestos">
+        <>
+          <div className="table-container" role="region" aria-label="Tabla de repuestos">
           <table className="data-table">
             <thead>
               <tr>
@@ -452,7 +475,7 @@ export const RepuestosPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {repuestosFiltrados.map((repuesto) => (
+              {repuestosPaginados.map((repuesto) => (
                 <tr key={repuesto.idRepuesto} className="table-row">
                   <td className="cell-modelo">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -533,7 +556,16 @@ export const RepuestosPage: React.FC = () => {
             </tbody>
           </table>
         </div>
-      )}
+
+        <Pagination
+          currentPage={safeCurrentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={repuestosFiltrados.length}
+          pageSize={PAGE_SIZE}
+        />
+      </>
+    )}
 
       {/* Modales */}
       <RepuestoDetailModal
