@@ -441,7 +441,6 @@ export const VehiculosPage: React.FC = () => {
               <table className="data-table" aria-label="Tabla de gestión de vehículos">
                 <thead>
                   <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Patente</th>
                     <th scope="col">Marca</th>
                     <th scope="col">Modelo</th>
@@ -466,7 +465,6 @@ export const VehiculosPage: React.FC = () => {
 
                     return (
                       <tr key={v.idVehiculo}>
-                        <td className="cell-id">#{v.idVehiculo}</td>
                         <td className="cell-patente">
                           <strong>{v.patente}</strong>
                         </td>

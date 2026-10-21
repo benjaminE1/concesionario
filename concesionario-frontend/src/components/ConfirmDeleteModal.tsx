@@ -75,13 +75,10 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
             <p>
               <strong>Modelo:</strong> {vehiculo.modelo} ({vehiculo.anio})
             </p>
-            <p>
-              <strong>ID:</strong> #{vehiculo.idVehiculo}
-            </p>
           </div>
 
           <p className="help-note" style={{ color: '#f87171' }}>
-            Esta operación invocará <code>DELETE /api/vehiculos/{vehiculo.idVehiculo}</code> en la base de datos y no se puede deshacer.
+            Esta acción no se puede deshacer y el registro del vehículo será eliminado permanentemente del sistema.
           </p>
 
           {error && (

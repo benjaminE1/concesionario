@@ -40,13 +40,13 @@ export const VehiculoDetailModal: React.FC<VehiculoDetailModalProps> = ({
     }).format(precio)
   }
 
-  const nombreMarca = marcasMap[vehiculo.idMarca] || `Marca #${vehiculo.idMarca}`
+  const nombreMarca = marcasMap[vehiculo.idMarca] || 'No especificada'
   const nombreTipoVehiculo =
-    tiposVehiculoMap[vehiculo.idTipoVehiculo] || `Tipo #${vehiculo.idTipoVehiculo}`
+    tiposVehiculoMap[vehiculo.idTipoVehiculo] || 'No especificado'
   const nombreCombustible =
-    tiposCombustibleMap[vehiculo.idTipoCombustible] || `Combustible #${vehiculo.idTipoCombustible}`
+    tiposCombustibleMap[vehiculo.idTipoCombustible] || 'No especificado'
   const nombreSucursal =
-    sucursalesMap[vehiculo.idSucursal] || `Sucursal #${vehiculo.idSucursal}`
+    sucursalesMap[vehiculo.idSucursal] || 'No asignada'
 
   const estadoLower = vehiculo.estado.toLowerCase()
   const badgeClass =
@@ -89,11 +89,6 @@ export const VehiculoDetailModal: React.FC<VehiculoDetailModalProps> = ({
 
         <div className="modal-body">
           <div className="detail-grid">
-            <div className="detail-item">
-              <span className="detail-label">Identificador (ID):</span>
-              <span className="detail-value">#{vehiculo.idVehiculo}</span>
-            </div>
-
             <div className="detail-item">
               <span className="detail-label">Patente:</span>
               <span className="detail-value cell-patente">

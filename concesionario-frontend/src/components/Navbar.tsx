@@ -79,18 +79,51 @@ export const Navbar: React.FC = () => {
               </Link>
             </li>
 
-            {/* Enlace al Panel Admin visible solo si tiene rol Admin */}
+            <li className="nav-item">
+              <Link
+                to="/repuestos"
+                className={`nav-link ${location.pathname === '/repuestos' ? 'is-active' : ''}`}
+                aria-current={location.pathname === '/repuestos' ? 'page' : undefined}
+                onClick={closeMenu}
+              >
+                Repuestos
+              </Link>
+            </li>
+
+            {/* Enlaces de gestión visible solo si tiene rol Admin */}
             {isAdmin && (
-              <li className="nav-item">
-                <Link
-                  to="/admin"
-                  className={`nav-link ${location.pathname === '/admin' ? 'is-active' : ''}`}
-                  aria-current={location.pathname === '/admin' ? 'page' : undefined}
-                  onClick={closeMenu}
-                >
-                  Panel Admin
-                </Link>
-              </li>
+              <>
+                <li className="nav-item">
+                  <Link
+                    to="/sucursales"
+                    className={`nav-link ${location.pathname === '/sucursales' ? 'is-active' : ''}`}
+                    aria-current={location.pathname === '/sucursales' ? 'page' : undefined}
+                    onClick={closeMenu}
+                  >
+                    Sucursales
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/usuarios"
+                    className={`nav-link ${location.pathname === '/usuarios' ? 'is-active' : ''}`}
+                    aria-current={location.pathname === '/usuarios' ? 'page' : undefined}
+                    onClick={closeMenu}
+                  >
+                    Usuarios
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/admin"
+                    className={`nav-link ${location.pathname === '/admin' ? 'is-active' : ''}`}
+                    aria-current={location.pathname === '/admin' ? 'page' : undefined}
+                    onClick={closeMenu}
+                  >
+                    Panel Admin
+                  </Link>
+                </li>
+              </>
             )}
 
             {/* Sección de autenticación */}

@@ -18,6 +18,26 @@ export interface UsuarioResponseDto {
   nombreRol?: string | null
 }
 
+export interface Rol {
+  idRol: number
+  nombre: string
+}
+
+export interface CrearUsuarioDto {
+  nombre: string
+  email: string
+  password: string
+  telefono?: string | null
+  idRol: number
+}
+
+export interface ActualizarUsuarioDto {
+  nombre: string
+  email: string
+  telefono?: string | null
+  idRol: number
+}
+
 export interface VehiculoResponseDto {
   idVehiculo: number
   patente: string
@@ -67,6 +87,34 @@ export interface Sucursal {
   telefono?: string | null
   ciudad: string
 }
+
+export interface CreateSucursalDto {
+  nombre: string
+  direccion: string
+  telefono?: string | null
+  ciudad: string
+}
+
+export interface UpdateSucursalDto extends CreateSucursalDto {}
+
+export interface Repuesto {
+  idRepuesto: number
+  nombre: string
+  codigoReferencia?: string | null
+  precio: number
+  stock: number
+  idSucursal?: number | null
+}
+
+export interface CreateRepuestoDto {
+  nombre: string
+  codigoReferencia?: string | null
+  precio: number
+  stock: number
+  idSucursal?: number | null
+}
+
+export interface UpdateRepuestoDto extends CreateRepuestoDto {}
 
 // Estructura de usuario extraído del JWT en frontend
 export interface AuthUser {

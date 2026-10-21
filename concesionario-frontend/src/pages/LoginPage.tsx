@@ -161,11 +161,11 @@ export const LoginPage: React.FC = () => {
           </button>
         </form>
 
-        {/* Tarjeta de ayuda con credenciales de prueba */}
-        <aside className="login-help" aria-label="Credenciales para evaluación">
+        {/* Tarjeta de ayuda con credenciales de acceso */}
+        <aside className="login-help" aria-label="Credenciales de acceso">
           <p className="help-title" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <Lightbulb size={18} aria-hidden="true" style={{ color: '#f59e0b', flexShrink: 0 }} />
-            <span>Credenciales de prueba (Rol Admin):</span>
+            <span>Credenciales de demostración:</span>
           </p>
           <div className="help-box">
             <p>
@@ -175,9 +175,6 @@ export const LoginPage: React.FC = () => {
               <strong>Contraseña:</strong> <code>123</code>
             </p>
           </div>
-          <p className="help-note">
-            Usuario administrador registrado en la base de datos SQL Server (ID: 2).
-          </p>
         </aside>
 
         <div className="login-footer">

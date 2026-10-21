@@ -482,6 +482,7 @@ body {
   flex-wrap: wrap;
   gap: 1.25rem;
   align-items: flex-end;
+  margin-bottom: 1.5rem;
 }
 
 .filter-group {
@@ -496,17 +497,33 @@ body {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 /* Campos de Formulario y Selectores en Tema Oscuro */
 .form-input, .form-select {
-  padding: 0.6rem 0.85rem;
+  width: 100%;
+  padding: 0.65rem 0.85rem;
   font-size: 0.95rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background-color: #0f172a;
   color: var(--color-text-main);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 16px;
+  padding-right: 2.25rem;
 }
 
 .form-select option {
@@ -516,6 +533,10 @@ body {
 
 .form-input::placeholder {
   color: #64748b;
+}
+
+.form-input:hover, .form-select:hover {
+  border-color: #3b82f6;
 }
 
 .form-input:focus, .form-select:focus {

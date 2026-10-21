@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { LogOut, CarFront, Users, Building2 } from 'lucide-react'
+import { LogOut, CarFront, Users, Building2, Wrench } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 
 export const AdminPanelPage: React.FC = () => {
@@ -31,16 +31,13 @@ export const AdminPanelPage: React.FC = () => {
       {/* Tarjeta de Sesión Activa */}
       <section className="connectivity-card" aria-labelledby="session-title">
         <h2 id="session-title" className="card-title">
-          Credenciales y Claims Verificados (JWT)
+          Información de la Cuenta
         </h2>
         <p className="info-text">
-          La siguiente información fue extraída y validada directamente desde el token JWT emitido por ASP.NET Core:
+          Datos de acceso y perfil del usuario actualmente en sesión:
         </p>
 
         <div className="connectivity-details" style={{ lineHeight: '1.8' }}>
-          <p>
-            <strong>ID de Usuario:</strong> {user?.id}
-          </p>
           <p>
             <strong>Nombre:</strong> {user?.name}
           </p>
@@ -52,7 +49,7 @@ export const AdminPanelPage: React.FC = () => {
             <span className="status-pill badge-disponible">{user?.role}</span>
           </p>
           <p>
-            <strong>Estado de Token:</strong> Válido y activo en cabecera HTTP Bearer
+            <strong>Estado de Sesión:</strong> <span style={{ color: '#6ee7b7' }}>Activa</span>
           </p>
         </div>
       </section>
@@ -60,7 +57,7 @@ export const AdminPanelPage: React.FC = () => {
       {/* Opciones y Recursos Administrativos */}
       <section className="grid-section" aria-labelledby="admin-features-title">
         <h2 id="admin-features-title" className="section-title">
-          Privilegios de Administrador en la API
+          Módulos Administrativos
         </h2>
 
         <div className="cards-grid">
@@ -70,7 +67,7 @@ export const AdminPanelPage: React.FC = () => {
               <span>Gestión de Vehículos</span>
             </h3>
             <p className="info-text">
-              Tu rol permite crear, editar y eliminar vehículos en el backend (rutas <code>POST</code>, <code>PUT</code>, <code>DELETE /api/vehiculos</code>).
+              Administración completa del catálogo de vehículos, inventario, precios y disponibilidad de flota.
             </p>
             <Link to="/vehiculos" className="btn btn-primary" style={{ marginTop: 'auto' }}>
               Ir a Vehículos
@@ -83,24 +80,37 @@ export const AdminPanelPage: React.FC = () => {
               <span>Gestión de Usuarios y Roles</span>
             </h3>
             <p className="info-text">
-              Autorización completa sobre los endpoints administrativos <code>/api/Usuario</code> y <code>/api/rol</code> que exigen política <code>RequireRole(&quot;Admin&quot;)</code>.
+              Administración de cuentas de usuarios, personal de ventas, mecánicos y asignación de perfiles.
             </p>
-            <span className="status-pill badge-otro" style={{ marginTop: 'auto', alignSelf: 'flex-start' }}>
-              Módulo Etapa posterior
-            </span>
+            <Link to="/usuarios" className="btn btn-primary" style={{ marginTop: 'auto' }}>
+              Ir a Usuarios
+            </Link>
           </article>
 
           <article className="info-card">
             <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Building2 size={18} color="#60a5fa" aria-hidden="true" />
-              <span>Sucursales y Facturas</span>
+              <span>Gestión de Sucursales</span>
             </h3>
             <p className="info-text">
-              Control sobre sucursales (<code>/api/sucursal</code>) y registro contable de facturas (<code>/api/facturas</code>).
+              Administración de sedes físicas, puntos de atención al cliente y talleres del concesionario.
             </p>
-            <span className="status-pill badge-otro" style={{ marginTop: 'auto', alignSelf: 'flex-start' }}>
-              Módulo Etapa posterior
-            </span>
+            <Link to="/sucursales" className="btn btn-primary" style={{ marginTop: 'auto' }}>
+              Ir a Sucursales
+            </Link>
+          </article>
+
+          <article className="info-card">
+            <h3 className="info-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Wrench size={18} color="#60a5fa" aria-hidden="true" />
+              <span>Gestión de Repuestos</span>
+            </h3>
+            <p className="info-text">
+              Catálogo de partes, piezas mecánicas y control de stock e inventario en bodega.
+            </p>
+            <Link to="/repuestos" className="btn btn-primary" style={{ marginTop: 'auto' }}>
+              Ir a Repuestos
+            </Link>
           </article>
         </div>
       </section>
